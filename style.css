@@ -1,0 +1,806 @@
+/* ============================================
+   Calendário Mágico de Preparação para o Natal
+   Estilos Premium — Design Natalino Elegante
+   ============================================ */
+
+/* ============================================
+   1. RESET & VARIÁVEIS GLOBAIS
+   ============================================ */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Paleta de cores natalina premium */
+  --bg-dark: #0a0c14;
+  --bg-gradient: linear-gradient(
+    135deg,
+    #0a0c14 0%,
+    #1a0f0f 30%,
+    #0d1117 60%,
+    #0a0c14 100%
+  );
+  --gold-primary: #d4a843;
+  --gold-light: #f0d27a;
+  --gold-bright: #ffd700;
+  --gold-glow: rgba(212, 168, 67, 0.4);
+  --red-christmas: #b91c1c;
+  --red-light: #dc2626;
+  --green-christmas: #166534;
+  --green-light: #22c55e;
+  --white-soft: #f5f0e8;
+  --white-pure: #ffffff;
+  --text-primary: #f5f0e8;
+  --text-secondary: rgba(245, 240, 232, 0.7);
+  --text-muted: rgba(245, 240, 232, 0.5);
+  --overlay-dark: rgba(0, 0, 0, 0.85);
+  --glass-bg: rgba(20, 15, 10, 0.92);
+  --glass-border: rgba(212, 168, 67, 0.25);
+  --shadow-gold: 0 0 30px rgba(212, 168, 67, 0.15);
+
+  /* Tipografia */
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: "Lato", "Segoe UI", sans-serif;
+
+  /* Espaçamento */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2.5rem;
+  --spacing-xl: 4rem;
+
+  /* Bordas e raios */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  /* Transições */
+  --transition-fast: 0.2s ease;
+  --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-gradient);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   2. CANVAS DE NEVE E PARTÍCULAS DOURADAS
+   ============================================ */
+#snowCanvas,
+#goldenCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#goldenCanvas {
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+#goldenCanvas.active {
+  opacity: 1;
+}
+
+/* ============================================
+   3. CABEÇALHO DO SITE
+   ============================================ */
+.site-header {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: var(--spacing-xl) var(--spacing-md) var(--spacing-lg);
+  animation: fadeInDown 1s ease forwards;
+}
+
+.header-ornament {
+  font-size: 1.5rem;
+  color: var(--gold-primary);
+  margin-bottom: var(--spacing-sm);
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+.site-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  font-weight: 800;
+  background: linear-gradient(
+    135deg,
+    var(--gold-light) 0%,
+    var(--gold-primary) 40%,
+    var(--gold-bright) 60%,
+    var(--gold-light) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-shadow: none;
+  filter: drop-shadow(0 0 20px rgba(212, 168, 67, 0.3));
+}
+
+.site-subtitle {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  color: var(--gold-primary);
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: var(--spacing-xs);
+  opacity: 0.9;
+}
+
+.header-divider {
+  margin: var(--spacing-md) auto;
+  width: 200px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gold-primary),
+    transparent
+  );
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.divider-star {
+  font-size: 1.2rem;
+  background: var(--bg-dark);
+  padding: 0 var(--spacing-sm);
+  position: relative;
+  z-index: 1;
+}
+
+.site-description {
+  font-family: var(--font-body);
+  font-size: clamp(0.85rem, 2vw, 1.05rem);
+  color: var(--text-secondary);
+  font-weight: 300;
+  line-height: 1.8;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   4. GRADE DO CALENDÁRIO
+   ============================================ */
+.calendar-container {
+  position: relative;
+  z-index: 10;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md) var(--spacing-xl);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--spacing-md);
+  justify-items: center;
+}
+
+/* ============================================
+   5. CARTÕES DOS DIAS
+   ============================================ */
+.day-card {
+  width: 100%;
+  max-width: 200px;
+  aspect-ratio: 1;
+  background: linear-gradient(
+    145deg,
+    rgba(30, 20, 15, 0.9),
+    rgba(15, 10, 8, 0.95)
+  );
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-smooth);
+  animation: fadeInUp 0.6s ease forwards;
+  animation-delay: calc(var(--delay) * 0.06s);
+  opacity: 0;
+}
+
+/* Brilho de fundo no card */
+.day-card::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity var(--transition-smooth);
+}
+
+/* Borda brilhante ao hover */
+.day-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    135deg,
+    var(--gold-primary),
+    transparent 40%,
+    transparent 60%,
+    var(--gold-light)
+  );
+  z-index: -1;
+  opacity: 0;
+  transition: opacity var(--transition-smooth);
+}
+
+.day-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow:
+    var(--shadow-gold),
+    0 20px 40px rgba(0, 0, 0, 0.4);
+  border-color: var(--gold-primary);
+}
+
+.day-card:hover::before {
+  opacity: 1;
+}
+
+.day-card:hover::after {
+  opacity: 1;
+}
+
+/* Número do dia */
+.day-number {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  line-height: 1;
+  transition: all var(--transition-smooth);
+  position: relative;
+  z-index: 1;
+}
+
+.day-card:hover .day-number {
+  transform: scale(1.1);
+  text-shadow: 0 0 20px var(--gold-glow);
+}
+
+/* Ícone decorativo */
+.day-icon {
+  font-size: 1.3rem;
+  margin-top: var(--spacing-xs);
+  opacity: 0.7;
+  transition: all var(--transition-smooth);
+  position: relative;
+  z-index: 1;
+}
+
+.day-card:hover .day-icon {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* Label "Dezembro X" */
+.day-label {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.4rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================
+   6. ESTADOS DOS CARTÕES
+   ============================================ */
+
+/* Dia bloqueado (futuro) */
+.day-card.locked {
+  cursor: not-allowed;
+  opacity: 0.45;
+  filter: grayscale(0.5);
+}
+
+.day-card.locked:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--glass-border);
+}
+
+.day-card.locked::before,
+.day-card.locked::after {
+  display: none;
+}
+
+.day-card.locked .day-number {
+  color: var(--text-muted);
+}
+
+/* Indicador de cadeado */
+.lock-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.8rem;
+  opacity: 0.5;
+}
+
+/* Dia já aberto */
+.day-card.opened {
+  background: linear-gradient(
+    145deg,
+    rgba(22, 101, 52, 0.3),
+    rgba(15, 10, 8, 0.9)
+  );
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.day-card.opened .day-icon::after {
+  content: " ✓";
+  font-size: 0.8rem;
+  color: var(--green-light);
+}
+
+/* ============================================
+   7. DIA 25 — ESTILO ESPECIAL
+   ============================================ */
+.day-card.day-25 {
+  background: linear-gradient(
+    145deg,
+    rgba(60, 30, 10, 0.9),
+    rgba(30, 15, 5, 0.95)
+  );
+  border-color: rgba(255, 215, 0, 0.4);
+  grid-column: 1 / -1;
+  max-width: 280px;
+  aspect-ratio: auto;
+  padding: var(--spacing-lg);
+}
+
+.day-card.day-25 .day-number {
+  font-size: 3.5rem;
+  color: var(--gold-bright);
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.day-card.day-25 .day-icon {
+  font-size: 2rem;
+}
+
+.day-25-label {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--gold-primary);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: var(--spacing-xs);
+}
+
+/* ============================================
+   8. MODAL — CONTEÚDO DO DIA
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-dark);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-smooth);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  max-width: 560px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-md);
+  position: relative;
+  transform: scale(0.85) translateY(30px);
+  transition: transform var(--transition-bounce);
+  box-shadow:
+    0 0 60px rgba(212, 168, 67, 0.1),
+    0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* Scrollbar personalizada no modal */
+.modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal::-webkit-scrollbar-thumb {
+  background: var(--gold-glow);
+  border-radius: 3px;
+}
+
+.modal-overlay.active .modal {
+  transform: scale(1) translateY(0);
+}
+
+/* Botão fechar */
+.modal-close {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  background: none;
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.modal-close:hover {
+  color: var(--gold-light);
+  border-color: var(--gold-primary);
+  transform: rotate(90deg);
+}
+
+/* Número do dia no modal */
+.modal-day-number {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--gold-primary);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Título da missão */
+.modal-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 4vw, 1.9rem);
+  font-weight: 700;
+  text-align: center;
+  color: var(--gold-light);
+  line-height: 1.3;
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Divisor decorativo */
+.modal-divider {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--gold-primary);
+  margin-bottom: var(--spacing-md);
+  opacity: 0.6;
+}
+
+/* Seções do conteúdo */
+.modal-section {
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--gold-glow);
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.modal-section:nth-child(4) {
+  animation-delay: 0.1s;
+}
+.modal-section:nth-child(5) {
+  animation-delay: 0.2s;
+}
+.modal-section:nth-child(6) {
+  animation-delay: 0.3s;
+}
+
+.modal-section-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gold-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.modal-text {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.modal-question {
+  font-style: italic;
+  color: var(--gold-light);
+  font-weight: 400;
+}
+
+/* Rodapé do modal */
+.modal-footer {
+  text-align: center;
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid rgba(212, 168, 67, 0.1);
+  margin-top: var(--spacing-sm);
+}
+
+.modal-footer-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* ============================================
+   9. MODAL ESPECIAL — DIA 25
+   ============================================ */
+.modal.modal-day25 {
+  border-color: rgba(255, 215, 0, 0.5);
+  box-shadow:
+    0 0 80px rgba(255, 215, 0, 0.15),
+    0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.modal.modal-day25 .modal-title {
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* ============================================
+   10. RODAPÉ DO SITE
+   ============================================ */
+.site-footer {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: var(--spacing-lg) var(--spacing-md);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.footer-small {
+  font-size: 0.7rem;
+  margin-top: var(--spacing-xs);
+  opacity: 0.5;
+}
+
+/* ============================================
+   11. TOOLTIP — DIA BLOQUEADO
+   ============================================ */
+.tooltip {
+  position: fixed;
+  background: rgba(185, 28, 28, 0.9);
+  color: var(--white-pure);
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-family: var(--font-body);
+  pointer-events: none;
+  z-index: 500;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+}
+
+.tooltip.show {
+  opacity: 1;
+}
+
+/* ============================================
+   12. ANIMAÇÕES (KEYFRAMES)
+   ============================================ */
+
+/* Entrada suave de cima */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Entrada suave de baixo */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Brilho cintilante do título */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Piscar de estrela */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.85);
+  }
+}
+
+/* Brilho pulsante (Dia 25) */
+@keyframes pulseGlow {
+  0%,
+  100% {
+    text-shadow:
+      0 0 10px var(--gold-glow),
+      0 0 30px rgba(255, 215, 0, 0.15);
+  }
+  50% {
+    text-shadow:
+      0 0 20px var(--gold-glow),
+      0 0 50px rgba(255, 215, 0, 0.3),
+      0 0 80px rgba(255, 215, 0, 0.1);
+  }
+}
+
+/* ============================================
+   13. RESPONSIVIDADE
+   ============================================ */
+
+/* Tablets */
+@media (max-width: 768px) {
+  .calendar-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: var(--spacing-sm);
+  }
+
+  .day-card {
+    max-width: 170px;
+  }
+
+  .day-number {
+    font-size: 2rem;
+  }
+
+  .site-header {
+    padding: var(--spacing-lg) var(--spacing-sm) var(--spacing-md);
+  }
+
+  .modal {
+    padding: var(--spacing-md);
+    margin: var(--spacing-sm);
+  }
+}
+
+/* Celulares */
+@media (max-width: 480px) {
+  .calendar-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.7rem;
+  }
+
+  .day-card {
+    max-width: 100%;
+    border-radius: var(--radius-sm);
+  }
+
+  .day-number {
+    font-size: 1.6rem;
+  }
+
+  .day-icon {
+    font-size: 1rem;
+  }
+
+  .day-label {
+    display: none;
+  }
+
+  .day-card.day-25 {
+    max-width: 100%;
+    padding: var(--spacing-md);
+  }
+
+  .day-card.day-25 .day-number {
+    font-size: 2.5rem;
+  }
+
+  .modal {
+    padding: var(--spacing-md) var(--spacing-sm);
+    border-radius: var(--radius-md);
+    max-height: 85vh;
+  }
+
+  .modal-title {
+    font-size: 1.3rem;
+  }
+
+  .modal-section {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  .site-description {
+    font-size: 0.8rem;
+  }
+}
+
+/* ============================================
+   14. PREFERÊNCIA DE MOVIMENTO REDUZIDO
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  #snowCanvas,
+  #goldenCanvas {
+    display: none;
+  }
+}

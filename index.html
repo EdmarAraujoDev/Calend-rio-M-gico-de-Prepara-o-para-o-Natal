@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <!-- ============================================
+         Calendário Mágico de Preparação para o Natal
+         Estrutura principal da página
+         ============================================ -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Calendário Mágico de Preparação para o Natal — 25 dias de missões, reflexões e atividades em família para viver a magia natalina."
+    />
+    <title>🎄 Calendário Mágico de Preparação para o Natal</title>
+
+    <!-- Google Fonts — Tipografia sofisticada -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ============================================
+         Canvas para efeito de neve caindo
+         ============================================ -->
+    <canvas id="snowCanvas"></canvas>
+
+    <!-- ============================================
+         Partículas douradas especiais (Dia 25)
+         ============================================ -->
+    <canvas id="goldenCanvas"></canvas>
+
+    <!-- ============================================
+         Cabeçalho do site
+         ============================================ -->
+    <header class="site-header">
+      <div class="header-ornament">✦</div>
+      <h1 class="site-title">Calendário Mágico</h1>
+      <p class="site-subtitle">Preparação para o Natal</p>
+      <div class="header-divider">
+        <span class="divider-star">⭐</span>
+      </div>
+      <p class="site-description">
+        25 dias de missões, reflexões e momentos em família<br />para viver a
+        verdadeira magia do Natal
+      </p>
+    </header>
+
+    <!-- ============================================
+         Grade do Calendário — 25 dias
+         ============================================ -->
+    <main class="calendar-container">
+      <div class="calendar-grid" id="calendarGrid">
+        <!-- Os 25 dias serão gerados pelo JavaScript -->
+      </div>
+    </main>
+
+    <!-- ============================================
+         Modal Elegante — Conteúdo do dia
+         ============================================ -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal" id="modal">
+        <!-- Botão fechar -->
+        <button class="modal-close" id="modalClose" aria-label="Fechar">
+          ✕
+        </button>
+
+        <!-- Número do dia -->
+        <div class="modal-day-number" id="modalDayNumber"></div>
+
+        <!-- Título da missão -->
+        <h2 class="modal-title" id="modalTitle"></h2>
+
+        <!-- Divisor decorativo -->
+        <div class="modal-divider">❄</div>
+
+        <!-- Reflexão -->
+        <div class="modal-section">
+          <h3 class="modal-section-title">🕯️ Reflexão</h3>
+          <p class="modal-text" id="modalReflection"></p>
+        </div>
+
+        <!-- Atividade prática -->
+        <div class="modal-section">
+          <h3 class="modal-section-title">🎯 Atividade Prática</h3>
+          <p class="modal-text" id="modalActivity"></p>
+        </div>
+
+        <!-- Pergunta para a família -->
+        <div class="modal-section">
+          <h3 class="modal-section-title">💬 Pergunta para a Família</h3>
+          <p class="modal-text modal-question" id="modalQuestion"></p>
+        </div>
+
+        <!-- Rodapé do modal -->
+        <div class="modal-footer">
+          <span class="modal-footer-text"
+            >✨ Feliz preparação natalina! ✨</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================
+         Rodapé do site
+         ============================================ -->
+    <footer class="site-footer">
+      <p>✨ Feito com amor para celebrar o espírito natalino ✨</p>
+      <p class="footer-small">Calendário Mágico de Preparação para o Natal</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+  </body>
+</html>
